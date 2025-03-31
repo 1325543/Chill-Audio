@@ -16,9 +16,36 @@
     </style>
 </head>
 <body>
-    <audio autoplay loop>
+    <audio id="audio" autoplay loop>
         <source src="audio.mp3" type="audio/mpeg">
         Il tuo browser non supporta l'elemento audio.
     </audio>
+    <script>
+        function checkAudioPermission() {
+            let audio = document.getElementById("audio");
+            let playPromise = audio.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    let message = document.createElement("div");
+                    message.innerHTML = "L'audio è bloccato. Clicca per attivarlo.";
+                    message.style.position = "fixed";
+                    message.style.top = "50%";
+                    message.style.left = "50%";
+                    message.style.transform = "translate(-50%, -50%)";
+                    message.style.background = "white";
+                    message.style.padding = "20px";
+                    message.style.border = "1px solid black";
+                    message.style.cursor = "pointer";
+                    document.body.appendChild(message);
+                    
+                    message.addEventListener("click", function() {
+                        audio.play();
+                        message.remove();
+                    });
+                });
+            }
+        }
+        document.body.addEventListener("click", checkAudioPermission, { once: true });
+    </script>
 </body>
 </html>
